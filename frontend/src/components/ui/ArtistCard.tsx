@@ -1,5 +1,4 @@
 import { FC } from "react";
-import PlayerComponent from "../PlayerComponent";
 import {
   Card,
   CardContent,
@@ -9,31 +8,15 @@ import {
 } from "./card";
 import timeConverter from "@/helpers/timeConverter";
 import { usePlayerStore } from "@/store/playerStore";
+import { Artist, Track } from "@/types";
 
 type Props = {
-  artist: {
-    name: string;
-    popularity: number;
-    external_urls: string;
-    image: string;
-    topTracks: {
-      album: {
-        image: string;
-        name: string;
-        release_date: string;
-      };
-      artists: { name: string }[];
-      duration_ms: number;
-      name: string;
-      uri: string;
-    }[];
-  };
-  handlePlayTrack: (uri: string) => void; // 🔹 Ta emot funktionen som en prop
+  artist: Artist;
+  handlePlayTrack: (track: Track) => void; // 🔹 Ta emot funktionen som en prop
 };
 
 const ArtistCard: FC<Props> = ({ artist, handlePlayTrack }) => {
   const togglePlay = usePlayerStore((state) => state.togglePlay);
-  const isPlaying = usePlayerStore((state) => state.isPlaying);
   return (
     <section className="max-w-4xl m-auto">
       <Card>
@@ -47,14 +30,11 @@ const ArtistCard: FC<Props> = ({ artist, handlePlayTrack }) => {
 
         <CardContent>
           <article className="grid md:grid-cols-4 grid-cols-2 gap-3 justify-center items-center">
-            {artist.topTracks.map((track) => (
+            {artist?.topTracks?.map((track) => (
               <Card
                 onClick={() => {
-                  console.log("play");
-                  handlePlayTrack(track.uri);
-                  console.log(isPlaying);
+                  handlePlayTrack(track);
                   togglePlay(true);
-                  console.log(isPlaying);
                 }}
                 className=" cursor-pointer hover:bg-white/60 hover:text-blue-500"
               >
@@ -63,9 +43,9 @@ const ArtistCard: FC<Props> = ({ artist, handlePlayTrack }) => {
                   <img src={track.album.image} alt="Album image" />
                 </CardHeader>
                 <CardContent className="text-xs">
-                  <CardDescription className="font-semibold text-sm">
-                    Artist: {track.artists.name}
-                  </CardDescription>
+                  {/* <CardDescription className="font-semibold text-sm">
+                    Artists: {track.artists.map((artist) => artist.name)}
+                  </CardDescription> */}
                   <CardDescription className="">
                     Album: {track.album.name}
                   </CardDescription>

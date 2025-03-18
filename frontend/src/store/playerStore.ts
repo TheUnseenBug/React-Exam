@@ -1,19 +1,19 @@
+import { Track } from "@/types";
 import { create } from "zustand";
-
 interface PlayerState {
-  trackUri: string | null;
+  track: Track | undefined;
   isPlaying: boolean;
   deviceId: string | null;
-  setTrack: (uri: string) => void;
+  setTrack: (track: Track) => void;
   setDeviceId: (id: string) => void;
   togglePlay: (boolean: boolean) => void;
 }
 
 export const usePlayerStore = create<PlayerState>((set) => ({
-  trackUri: null,
+  track: undefined,
   isPlaying: false,
   deviceId: null,
-  setTrack: (uri) => set({ trackUri: uri, isPlaying: true }),
+  setTrack: (track) => set({ track: track, isPlaying: true }),
   setDeviceId: (id) => set({ deviceId: id }),
   togglePlay: (boolean: boolean) => set(() => ({ isPlaying: boolean })),
 }));

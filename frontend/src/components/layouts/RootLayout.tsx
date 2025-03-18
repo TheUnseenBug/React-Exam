@@ -12,7 +12,7 @@ export default function RootLayout() {
       <>
         <Outlet />
       </>
-      {/* {accessToken && <PlayerComponent />} */}
+      {accessToken && <PlayerComponent />}
     </div>
   );
 }

@@ -24,8 +24,6 @@ export default function Home() {
 
   console.log("code:", code);
   console.log("accesstoken:", token);
-  useSpotifyPlayer();
-
   return (
     <main className="h-full">
       {code || token ? (

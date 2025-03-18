@@ -2,9 +2,9 @@ import ArtistCard from "@/components/ui/ArtistCard";
 import useAccessStore from "@/store/store";
 import { usePlayerStore } from "@/store/playerStore";
 import axios from "axios";
-import { release } from "os";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
+import { Track } from "@/types";
 
 const ArtistId = () => {
   const [artist, setArtist] = useState();
@@ -15,9 +15,9 @@ const ArtistId = () => {
   const setTrack = usePlayerStore((state) => state.setTrack);
   console.log("accessToken:", accessToken);
 
-  const handlePlayTrack = (uri: string) => {
-    console.log("🎵 Clicked track URI from ArtistId:", uri);
-    setTrack(uri); // Uppdatera Zustand-store
+  const handlePlayTrack = (track: Track) => {
+    console.log("🎵 Clicked track URI from ArtistId:", track.uri);
+    setTrack(track); // Uppdatera Zustand-store
   };
 
   useEffect(() => {
