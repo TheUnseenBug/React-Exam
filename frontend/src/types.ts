@@ -29,6 +29,7 @@ export type TopTrack = {
   name: string;
   uri: string;
 };
+
 export type Track = {
   name: string;
   duration_ms: number;
