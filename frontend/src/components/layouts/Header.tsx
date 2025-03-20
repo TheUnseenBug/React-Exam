@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import useAccessStore from "@/store/store";
 import { NavLink } from "react-router-dom";
 import LogoutModal from "./LogoutModal";
+import { useSpotifyPlayer } from "@/helpers/SpotifyPlayer";
 
 const Header: React.FC = () => {
   // Hämta funktion för att uppdatera access token
   const addAccessToken = useAccessStore((state) => state.addAccessToken);
   const accessToken = useAccessStore((state) => state.accessToken);
+  const player = useSpotifyPlayer();
   const navigate = useNavigate();
   // State för att kontrollera om utloggningsmodalen är öppen
   const [isModalOpen, setModalOpen] = useState(false);
@@ -20,6 +22,7 @@ const Header: React.FC = () => {
   // Hantera bekräftad utloggning
   const confirmLogout = () => {
     addAccessToken("");
+    player?.disconnect();
     setModalOpen(false);
     navigate("/");
   };
