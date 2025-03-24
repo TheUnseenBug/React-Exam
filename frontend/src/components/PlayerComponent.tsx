@@ -1,20 +1,47 @@
 import { usePlayerStore } from "@/store/playerStore";
-
-import { Slider } from "@radix-ui/react-slider";
 import {
   PreviousButton,
   PlayButton,
   PauseButton,
   NextButton,
 } from "./ui/PlayerButtons";
-import timeConverter from "@/helpers/timeConverter";
 import { useSpotifyPlayer } from "@/helpers/SpotifyPlayer";
 import { Volume2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import CustomSlider from "./ui/CustomSlider";
+import DeviceMenu from "./ui/DeviceMenu";
+
 const PlayerComponent = () => {
   const { isPlaying, togglePlay, track } = usePlayerStore();
   const player = useSpotifyPlayer();
-  const [volume, setVolume] = useState(70);
+  const [volume, setVolume] = useState(20);
+  const [progress, setProgress] = useState(0);
+  const accessToken = localStorage.getItem("spotify_access_token");
+
+  useEffect(() => {
+    let intervalId: number | undefined;
+
+    if (isPlaying && track) {
+      intervalId = window.setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= track.duration_ms) {
+            clearInterval(intervalId);
+            return track.duration_ms;
+          }
+          return prev + 1000;
+        });
+      }, 1000);
+    }
+
+    // Reset progress when track changes
+    if (track) {
+      setProgress(0);
+    }
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [isPlaying, track]);
 
   const handlePlayPause = async () => {
     if (!player) return;
@@ -35,29 +62,90 @@ const PlayerComponent = () => {
     }
   };
 
+  const handleDeviceSelect = async (deviceId: string) => {
+    if (!player) return;
+
+    try {
+      // First try transferring playback
+      const response = await fetch(
+        "https://api.spotify.com/v1/me/player/transfer",
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            device_ids: [deviceId],
+            play: isPlaying,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        console.error(
+          "Transfer failed:",
+          response.status,
+          await response.text()
+        );
+
+        // If transfer fails, try setting the device directly
+        const fallbackResponse = await fetch(
+          `https://api.spotify.com/v1/me/player`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              device_ids: [deviceId],
+            }),
+          }
+        );
+
+        if (!fallbackResponse.ok) {
+          console.error(
+            "Fallback failed:",
+            fallbackResponse.status,
+            await fallbackResponse.text()
+          );
+        }
+      }
+    } catch (error) {
+      console.error("Error transferring playback:", error);
+    }
+  };
+
+  const formatTime = (ms: number) => {
+    const minutes = Math.floor(ms / 60000);
+    const seconds = Math.floor((ms % 60000) / 1000);
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
+
   return (
-    <div className="fixed bottom-0 right-0 left-0 w-screen bg-yellow-400 border-neutral-800 h-20">
+    <div className="fixed bottom-0 right-0 left-0 w-screen bg-blue-500 border-neutral-800 h-20">
       {track ? (
         <div className="max-w-screen-xl mx-auto h-full flex items-center">
           {/* Left: Track info */}
-          <div className="flex items-center w-1/3">
+          <div className="flex items-center w-1/3 px-4">
             <img
               src={track.album.image}
               alt="Album Cover"
-              className="h-14 w-14 object-cover mr-4"
+              className="h-14 w-14 object-cover"
             />
-            <div className="flex flex-col">
-              <p className="text-blue-500 font-medium truncate ">
+            <div className="flex flex-col px-4">
+              <p className="text-yellow-100 font-semibold truncate text-left">
                 {track.name}
               </p>
-              <p className="text-blue-500 text-sm truncate text-left">
+              <p className="text-yellow-100 text-sm truncate text-left">
                 {track.album.name}
               </p>
             </div>
           </div>
 
           {/* Center: Player controls */}
-          <div className="flex flex-col items-center w-1/3">
+          <div className="flex flex-col items-center w-1/3 px-4">
             <div className="flex items-center space-x-4">
               <PreviousButton onClick={() => player?.previousTrack()} />
               {isPlaying ? (
@@ -67,30 +155,36 @@ const PlayerComponent = () => {
               )}
               <NextButton onClick={() => player?.nextTrack()} />
             </div>
-            <div className="w-full mt-2">
-              <Slider
+
+            {/* Timer bar */}
+            <div className="w-full mt-2 flex items-center">
+              <span className="text-xs text-yellow-100 mr-2 w-10 text-right">
+                {formatTime(progress)}
+              </span>
+              <CustomSlider
                 min={0}
                 max={track.duration_ms}
-                defaultValue={[1]}
-                step={1}
-                className="w-full"
-                aria-label="Progress"
+                value={progress}
+                onChange={(value) => setProgress(value)}
+                className="flex-1"
               />
+              <span className="text-xs text-yellow-100 ml-2 w-10">
+                {formatTime(track.duration_ms)}
+              </span>
             </div>
           </div>
 
           {/* Right: Volume control */}
-          <div className="flex items-center justify-end w-1/3">
-            <Volume2 size={20} className="text-black mr-2" />
+          <div className="flex items-center justify-center w-1/3 px-4">
+            <DeviceMenu onDeviceSelect={handleDeviceSelect} />
+            <Volume2 size={20} className="text-white mx-2" />
             <div className="w-32">
-              <Slider
+              <CustomSlider
                 min={0}
                 max={100}
-                value={[volume]}
-                step={1}
-                onValueChange={handleVolumeChange}
+                value={volume}
+                onChange={(value) => handleVolumeChange([value])}
                 className="w-full"
-                aria-label="Volume"
               />
             </div>
           </div>
@@ -105,43 +199,3 @@ const PlayerComponent = () => {
 };
 
 export default PlayerComponent;
-
-/*
-<div className="player-container p-2 flex justify-center rounded-md border-4 border-black bg-yellow-400 fixed w-full bottom-0 h-[20vh]">
-  {track ? (
-    <div className="flex items-stretch  gap-3 self-center bg-colors-customYellow border-4 border-black rounded-md p-4 w-full">
-      <img
-        src={track.album.image}
-        alt="Album Cover"
-        className="rounded-md border-4 border-black w-1/3 self-center object-cover"
-      />
-      <div className="rounded-md border-4 border-black w-2/3 p-2 bg-colors-customPink text-left">
-        <h2 className="text-3xl text-strong">{track.name}</h2>
-        {/* <h3 className="text-2xl">
-          {track.artists.map((artist) => artist.name).join(", ")}
-        </h3> *}
-        <p>{track.album.name}</p>
-        <Slider
-          min={0}
-          max={track.duration_ms}
-          defaultValue={[1]}
-          step={1}
-          className="w-full"
-          aria-label="Volume"
-        />
-        <div className="flex gap-3 justify-center">
-          <PreviousButton onClick={() => player?.previousTrack()} />
-          {isPlaying ? (
-            <PauseButton onClick={() => handlePlayPause()} />
-          ) : (
-            <PlayButton onClick={() => handlePlayPause()} />
-          )}
-          <NextButton onClick={() => player?.nextTrack()} />
-        </div>
-      </div>
-    </div>
-  ) : (
-    <p>No song is playing...</p>
-  )}
-</div>
-*/

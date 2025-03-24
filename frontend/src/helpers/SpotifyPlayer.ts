@@ -7,7 +7,6 @@ export const useSpotifyPlayer = () => {
   const { accessToken } = useAccessStore();
   const { track, deviceId, setDeviceId } = usePlayerStore();
   const [player, setPlayer] = useState<Spotify.Player>();
-
   useEffect(() => {
     if (track) {
       console.log("track:", track);
@@ -15,8 +14,8 @@ export const useSpotifyPlayer = () => {
         axios.put(
           "https://api.spotify.com/v1/me/player/play",
           {
-            uris: [track.uri], // Spotify track URIs to play (array)
-            device_id: deviceId, // Optional: Specify the device to play on
+            uris: [track.uri],
+            device_id: deviceId,
           },
           {
             headers: {
@@ -30,7 +29,7 @@ export const useSpotifyPlayer = () => {
         console.error("Error starting playback:", error);
       }
     }
-  }, [accessToken, deviceId, track]); // Logga varje gång `trackUri` ändras
+  }, [accessToken, deviceId, track]);
 
   useEffect(() => {
     if (!accessToken) return;

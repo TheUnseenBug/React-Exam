@@ -18,14 +18,6 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/Player",
-        element: <Player />,
-      },
-      {
-        path: "/SignIn",
-        element: <SignIn />,
-      },
-      {
         path: "/artist/:id",
         element: <ArtistId />,
       },

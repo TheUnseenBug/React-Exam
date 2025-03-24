@@ -5,7 +5,6 @@ import useAccessStore from "@/store/store";
 import useAuth from "@/helpers/useAuth";
 import SongListContainer from "@/components/ui/SongListContainer";
 import { useEffect } from "react";
-import { useSpotifyPlayer } from "@/helpers/SpotifyPlayer";
 
 export default function Home() {
   // Hämta auth code från URL:en
@@ -22,8 +21,6 @@ export default function Home() {
     }
   }, [code]);
 
-  console.log("code:", code);
-  console.log("accesstoken:", token);
   return (
     <main className="h-full">
       {code || token ? (
