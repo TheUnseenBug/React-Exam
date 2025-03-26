@@ -144,7 +144,7 @@ const PlayerComponent = () => {
           </div>
 
           {/* Center: Player controls */}
-          <div className="flex flex-col items-center w-1/3 px-4">
+          <div className="flex flex-col items-center md:w-2/3 w-2/3 px-4">
             <div className="flex items-center space-x-4 ">
               <PreviousButton
                 size="sm"
