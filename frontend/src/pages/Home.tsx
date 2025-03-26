@@ -31,7 +31,7 @@ export default function Home() {
           <SearchBar />
           <section className="flex flex-col justify-center p-2 align-middle md:flex-row lg:flex-row h-1/2">
             <ListContainer />
-            <SongListContainer />
+            {/*<SongListContainer /> */}
           </section>
         </section>
       ) : (

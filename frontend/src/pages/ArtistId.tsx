@@ -13,7 +13,6 @@ const ArtistId = () => {
   const artistUri = path.startsWith("/artist/") ? path.substring(8) : null;
   const accessToken = useAccessStore().accessToken;
   const setTrack = usePlayerStore((state) => state.setTrack);
-  console.log("accessToken:", accessToken);
 
   const handlePlayTrack = (track: Track) => {
     console.log("🎵 Clicked track URI from ArtistId:", track.uri);
@@ -59,6 +58,8 @@ const ArtistId = () => {
         }
       }
     }
+
+    //Merge data from both apis into one dataset
     async function updateArtist() {
       const artistInfo = await getArtistInfo();
       const topTracks = await getTopTracks();

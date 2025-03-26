@@ -2,15 +2,10 @@ import useAccessStore from "@/store/store";
 import axios from "axios";
 import SongList from "./SongList";
 import { useState, useEffect } from "react";
-
-interface Song {
-  id: string;
-  name: string;
-  images: { url: string }[];
-}
+import { Track } from "@/types";
 
 export default function SongListContainer() {
-  const [songs, setSongs] = useState<Song[]>([]);
+  const [songs, setSongs] = useState<Track[]>([]);
   const accessToken = useAccessStore().accessToken;
 
   useEffect(() => {
@@ -32,7 +27,16 @@ export default function SongListContainer() {
         const formattedSongs: Song[] = response.data.items.map((track) => ({
           id: track.id,
           name: track.name,
-          images: track.album.images, // Extract images from album
+          uri: track.uri,
+          duration_ms: track.duration_ms,
+          album: {
+            image: track.album.images[0].url,
+            name: track.album.name,
+            release_date: track.album.release_date,
+          },
+          artists: {
+            name: track.artists[0].name,
+          },
         }));
 
         setSongs(formattedSongs);
@@ -49,7 +53,7 @@ export default function SongListContainer() {
       <h2 className="text-4xl font-bold mb-4 bg-colors-customGreen">
         Top Tracks
       </h2>
-      <SongList songs={songs} />
+      <SongList tracks={songs} />
     </div>
   );
 }

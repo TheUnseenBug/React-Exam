@@ -21,6 +21,7 @@ const PlayerComponent = () => {
   useEffect(() => {
     let intervalId: number | undefined;
 
+    //Start timer with same length as song
     if (isPlaying && track) {
       intervalId = window.setInterval(() => {
         setProgress((prev) => {
@@ -88,8 +89,6 @@ const PlayerComponent = () => {
           response.status,
           await response.text()
         );
-
-        // If transfer fails, try setting the device directly
         const fallbackResponse = await fetch(
           `https://api.spotify.com/v1/me/player`,
           {
@@ -128,17 +127,17 @@ const PlayerComponent = () => {
       {track ? (
         <div className="max-w-screen-xl mx-auto h-full flex items-center">
           {/* Left: Track info */}
-          <div className="flex items-center w-1/3 px-4">
+          <div className="flex items-center w-1/3 lg:px-4 px-2 text-xs lg:text-md">
             <img
               src={track.album.image}
               alt="Album Cover"
-              className="h-14 w-14 object-cover"
+              className="md:h-14 md:w-14 object-cover w-7 h-7"
             />
             <div className="flex flex-col px-4">
               <p className="text-yellow-100 font-semibold truncate text-left">
                 {track.name}
               </p>
-              <p className="text-yellow-100 text-sm truncate text-left">
+              <p className="text-yellow-100  truncate text-left">
                 {track.album.name}
               </p>
             </div>
@@ -146,14 +145,17 @@ const PlayerComponent = () => {
 
           {/* Center: Player controls */}
           <div className="flex flex-col items-center w-1/3 px-4">
-            <div className="flex items-center space-x-4">
-              <PreviousButton onClick={() => player?.previousTrack()} />
+            <div className="flex items-center space-x-4 ">
+              <PreviousButton
+                size="sm"
+                onClick={() => player?.previousTrack()}
+              />
               {isPlaying ? (
-                <PauseButton onClick={() => handlePlayPause()} />
+                <PauseButton size="sm" onClick={() => handlePlayPause()} />
               ) : (
-                <PlayButton onClick={() => handlePlayPause()} />
+                <PlayButton size="sm" onClick={() => handlePlayPause()} />
               )}
-              <NextButton onClick={() => player?.nextTrack()} />
+              <NextButton size="sm" onClick={() => player?.nextTrack()} />
             </div>
 
             {/* Timer bar */}

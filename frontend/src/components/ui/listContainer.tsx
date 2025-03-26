@@ -14,34 +14,36 @@ export default function ListContainer() {
   const accessToken = useAccessStore().accessToken;
 
   useEffect(() => {
-  async function getTopArtists() {
-    // const accessToken = useAccessStore().accessToken;
-    if (accessToken) {
-      try {
-        const response = await axios.get<{ items: Artist[] }>(
-          "https://api.spotify.com/v1/me/top/artists",
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        setArtists(response.data.items);
-        // return response.data.items; // Optionally return the data
-      } catch (error) {
-        console.error("Error fetching top artists:", error);
-        throw error; // Re-throw the error to be handled by the caller, if needed
+    async function getTopArtists() {
+      // const accessToken = useAccessStore().accessToken;
+      if (accessToken) {
+        try {
+          const response = await axios.get<{ items: Artist[] }>(
+            "https://api.spotify.com/v1/me/top/artists",
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+          setArtists(response.data.items);
+          // return response.data.items; // Optionally return the data
+        } catch (error) {
+          console.error("Error fetching top artists:", error);
+          throw error; // Re-throw the error to be handled by the caller, if needed
+        }
       }
     }
-  }
-  
+
     getTopArtists();
-  },[accessToken])
+  }, [accessToken]);
 
   return (
-    <div className="rounded-md border-4 border-black bg-colors-customYellow m-4 p-4 sm:w-full md:w-1/2 lg:w-1/3 h-[70vh] sm:h-[70vh] md:h-[70vh] lg:h-[60vh] overflow-y-auto">
-       <h2 className="text-4xl font-bold mb-4 bg-colors-customYellow">Top Artists</h2>
-       <ArtistList artists={artists} />
+    <div className="rounded-md border-4 border-black bg-colors-customYellow m-4 p-4 sm:w-full  h-[70vh] sm:h-[70vh] md:h-[70vh] lg:h-[60vh] overflow-y-auto">
+      <h2 className="text-4xl font-bold mb-4 bg-colors-customYellow">
+        Top Artists
+      </h2>
+      <ArtistList artists={artists} />
     </div>
   );
 }

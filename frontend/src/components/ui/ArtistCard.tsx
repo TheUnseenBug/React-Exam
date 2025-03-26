@@ -43,9 +43,6 @@ const ArtistCard: FC<Props> = ({ artist, handlePlayTrack }) => {
                   <img src={track.album.image} alt="Album image" />
                 </CardHeader>
                 <CardContent className="text-xs">
-                  {/* <CardDescription className="font-semibold text-sm">
-                    Artists: {track.artists.map((artist) => artist.name)}
-                  </CardDescription> */}
                   <CardDescription className="">
                     Album: {track.album.name}
                   </CardDescription>
