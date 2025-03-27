@@ -1,111 +1,132 @@
-### ANTON
+# Dara Music App - Component Overview
 
-# Dara Music App - Komponentöversikt
+## Main Components
 
-## Huvudkomponenter
-
-[![Brick Layers for everybody](https://x47fqbpt2q.ufs.sh/f/gFjC50OLd3eU9S9oBzWM2iW1deIh3k7zY6puryXg4twRxKsQ)
+(https://x47fqbpt2q.ufs.sh/f/gFjC50OLd3eU9S9oBzWM2iW1deIh3k7zY6puryXg4twRxKsQ)
 
 ### Home (`/src/pages/Home.tsx`)
 
-Applikationens startsida som hanterar:
+The application's home page that handles:
 
-- Spotify-autentisering via URL-parametrar
-- Växling mellan inloggnings- och sökvy
-- Rendering av sökfält och resultatlistor
+- Spotify authentication via URL parameters
+- Switching between login and search views
+- Rendering of search fields and result lists
 
 ### SearchBar (`/src/components/SearchBar.tsx`)
 
-Sökkomponent som möjliggör:
+Search component that enables:
 
-- Realtidssökning i Spotify's API
-- Debounced sökfunktionalitet (500ms fördröjning)
-- Visar både artist- och låtresultat
-- Formaterar och presenterar sökresultat i två separata listor
+- Real-time search in Spotify's API
+- Debounced search functionality (500ms delay)
+- Displays both artist and song results
+- Formats and presents search results in two separate lists
 
-## Hjälpfunktioner
+### MusicPlayer (`/src/components/PlayerComponent.tsx`)
+
+- Real-time player using spotifySDK
+- Show Artist and song you are listening to
+- Able to handle play/pause, skip and volume change
+- Slider that shows progress and slider to scroll in song
+
+## Helper Functions
 
 ### searchSpotify (`/src/helpers/searchSpotify.ts`)
 
-API-integrationsfunktion som:
+API integration function that:
 
-- Hanterar sökningar mot Spotify's API
-- Begränsar resultat till 5 artister och 5 låtar
-- Inkluderar felhantering och typning av resultat
+- Handles searches against Spotify's API
+- Limits results to 5 artists and 5 songs
+- Includes error handling and typing of results
 
-## Layout och Navigation
+### SpotifyPlayer (`/src/helpers/SpotifyPlayer.ts`)
+
+Handles the implementation of the SpotifyPlayer
+
+- Starts new song when global song state changes
+- Connects to spotify sdk
+- Strong error handling
+
+### useAuth (`/src/helpers/useAuth.ts`)
+
+Function that handles authentication workflow
+
+- Looks for accesstoken if you are new user run auth workflow
+- Handles refreshing accesstoken before it runs out
+
+## Layout and Navigation
 
 ### Router (`/src/router/Router.tsx`)
 
-Definierar applikationens routingstruktur med följande routes:
+Defines the application's routing structure with the following routes:
 
-- `/` - Startsida
-- `/Player` - Musikspelare
-- `/SignIn` - Inloggningssida
-- `/artist/:id` - Artistsida
-- `/reset` - Återställningssida
-- `*` - 404-sida
+- `/` - Home page
+- `/SignIn` - Sign-in page
+- `/artist/:id` - Artist page
+- `/reset` - Reset page
+- `*` - 404 page
 
 ### RootLayout (`/src/components/layouts/RootLayout.tsx`)
 
-Huvudlayout som:
+Main layout that:
 
-- Omsluter alla sidor
-- Innehåller gemensam header
-- Hanterar rendering av aktiv route
+- Wraps all pages
+- Contains a common header
+- Manages rendering of the active route
 
 ### Header (`/src/components/layouts/Header.tsx`)
 
-Navigationshuvud som innehåller:
+Navigation header that includes:
 
-- App-logotyp med länk till startsidan
-- Utloggningsfunktionalitet
-- Integration med LogoutModal
+- App logo with a link to the home page
+- Logout functionality
+- Integration with LogoutModal
 
 ### LogoutModal (`/src/components/layouts/LogoutModal.tsx`)
 
-Modal-komponent för utloggning som:
+Modal component for logging out that:
 
-- Visar bekräftelsedialog
-- Hanterar bekräftelse/avbryt-actions
-- Stilren design med mörkt tema
+- Displays a confirmation dialog
+- Handles confirm/cancel actions
+- Stylish design with a dark theme
 
-## Tekniska Detaljer
+## Technical Details
 
 ### State Management
 
-- Använder Zustand för global state management (`useAccessStore`)
-- Hanterar access tokens och autentiseringsstatus
+- Uses Zustand for global state management (`useAccessStore`)
+- Manages access tokens and authentication status
 
 ### Styling
 
-- Använder Tailwind CSS för styling
-- Konsekvent färgschema med anpassade färger
-- Responsiv design med flex-layouts
+- Uses Tailwind CSS for styling
+- Consistent color scheme with custom colors
+- Responsive design with flex layouts
 
-### Autentisering
+### Authentication
 
-- Implementerar Spotify OAuth-flöde
-- Hanterar access tokens säkert
-- Automatisk omdirigering efter autentisering
+- Implements Spotify OAuth flow
+- Manages access tokens securely
+- Automatic redirection after authentication
 
-### Felhantering
+### Error Handling
 
-- Omfattande felhantering i API-anrop
-- Fallback-states för misslyckade sökningar
-- Tydlig användarfeedback
+- Comprehensive error handling in API calls
+- Fallback states for failed searches
+- Clear user feedback
 
-## Användning
+## Usage
 
-1. Användaren loggar in via Spotify
-2. Efter autentisering visas sökgränssnittet
-3. Sökresultat uppdateras automatiskt medan användaren skriver
-4. Användaren kan logga ut via header-menyn
+1. The user logs in via Spotify
+2. After authentication, the search interface is displayed
+3. Search results update automatically as the user types
+4. The user can log out via the header menu
 
-## Utveckling
+## Development
 
-För att utveckla vidare på dessa komponenter:
+To further develop these components:
 
-1. Se till att ha nödvändiga miljövariabler för Spotify API
-2. Installera beroenden med `npm install`
-3. Kör utvecklingsservern med `npm run dev`
+1. Run npm install in the backend folder
+2. Start the backend server using npm devStart
+3. Run npm install in the frontend folder
+4. Start the frontend server using npm run dev
+5. Have fun coding!
