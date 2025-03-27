@@ -128,29 +128,29 @@ const PlayerComponent = () => {
   };
 
   return (
-    <div className="fixed bottom-0 right-0 left-0 w-screen bg-blue-500 border-neutral-800 h-20">
+    <div className="sticky bottom-0 right-0 left-0 w-full bg-blue-500 border-neutral-800 h-20">
       {track ? (
-        <div className="max-w-screen-xl mx-auto h-full flex items-center">
+        <div className="max-w-screen-2xl mx-auto h-full flex items-center">
           {/* Left: Track info */}
-          <div className="flex items-center w-1/3 lg:px-4 px-2 text-xs lg:text-md">
+          <div className="flex items-center w-1/3 lg:px-4 px-2 text-xs lg:text-md overflow-hidden">
             <img
               src={track.album.image}
               alt="Album Cover"
-              className="md:h-14 md:w-14 object-cover w-7 h-7"
+              className="md:h-14 md:w-14 object-cover w-7 h-7 rounded-lg"
             />
-            <div className="flex flex-col px-4">
+            <div className="flex flex-col px-2 overflow-hidden">
               <p className="text-yellow-100 font-semibold truncate text-left">
                 {track.name}
               </p>
-              <p className="text-yellow-100  truncate text-left">
+              <p className="text-yellow-100 truncate text-left">
                 {track.album.name}
               </p>
             </div>
           </div>
 
           {/* Center: Player controls */}
-          <div className="flex flex-col items-center md:w-2/3 w-2/3 px-4">
-            <div className="flex items-center space-x-4 ">
+          <div className="flex flex-col items-center md:w-4/6 w-2/3 px-4">
+            <div className="flex items-center space-x-4">
               <PreviousButton
                 size="sm"
                 onClick={() => player?.previousTrack()}
@@ -164,28 +164,30 @@ const PlayerComponent = () => {
             </div>
 
             {/* Timer bar */}
-            <div className="w-full mt-2 flex items-center">
-              <span className="text-xs text-yellow-100 mr-2 w-10 text-right">
+            <div className="w-full mt-2 flex items-center overflow-hidden">
+              <span className="text-xs text-yellow-100 mr-2 w-10 text-right whitespace-nowrap">
                 {formatTime(progress)}
               </span>
-              <CustomSlider
-                min={0}
-                max={track.duration_ms}
-                value={progress}
-                onChange={(value) => {
-                  setProgress(value);
-                  player?.seek(progress);
-                }}
-                className="flex-1"
-              />
-              <span className="text-xs text-yellow-100 ml-2 w-10">
+              <div className="flex-1 min-w-0">
+                <CustomSlider
+                  min={0}
+                  max={track.duration_ms}
+                  value={progress}
+                  onChange={(value) => {
+                    setProgress(value);
+                    player?.seek(progress);
+                  }}
+                  className="w-full"
+                />
+              </div>
+              <span className="text-xs text-yellow-100 ml-2 w-10 whitespace-nowrap">
                 {formatTime(track.duration_ms)}
               </span>
             </div>
           </div>
 
           {/* Right: Volume control */}
-          <div className="flex items-center justify-center w-1/3 px-4">
+          <div className="flex items-center justify-center w-1/3 px-4 overflow-hidden">
             <DeviceMenu onDeviceSelect={handleDeviceSelect} />
             <Volume2 size={20} className="text-white mx-2" />
             <div className="w-32">
@@ -200,7 +202,7 @@ const PlayerComponent = () => {
           </div>
         </div>
       ) : (
-        <div className="fixed bottom-0 left-0 right-0 bg-neutral-900 border-t border-neutral-800 h-20 px-4 flex items-center justify-center">
+        <div className="sticky bottom-0 left-0 right-0 bg-neutral-900 border-t border-neutral-800 h-20 px-4 flex items-center justify-center">
           <p className="text-neutral-400">No song is playing...</p>
         </div>
       )}

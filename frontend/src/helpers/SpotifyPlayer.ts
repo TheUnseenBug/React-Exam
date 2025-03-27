@@ -48,7 +48,7 @@ export const useSpotifyPlayer = () => {
         const spotifyPlayer = new window.Spotify.Player({
           name: "Dennis Spotify",
           getOAuthToken: (cb) => cb(accessToken),
-          volume: 0.1,
+          volume: 0.02,
         });
 
         // Add error listeners first

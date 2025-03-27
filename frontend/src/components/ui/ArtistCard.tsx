@@ -18,8 +18,8 @@ type Props = {
 const ArtistCard: FC<Props> = ({ artist, handlePlayTrack }) => {
   const togglePlay = usePlayerStore((state) => state.togglePlay);
   return (
-    <section className="max-w-4xl m-auto">
-      <Card>
+    <section className="max-w-4xl m-auto ">
+      <Card className="h-full">
         <CardHeader>
           <CardTitle>{artist.name}</CardTitle>
           <CardDescription>Popularity: {artist.popularity}</CardDescription>
@@ -32,7 +32,7 @@ const ArtistCard: FC<Props> = ({ artist, handlePlayTrack }) => {
           />
         </CardContent>
 
-        <CardContent>
+        <CardContent className="h-full">
           <article className="grid md:grid-cols-4 grid-cols-2 gap-3 justify-center items-center">
             {artist?.topTracks?.map((track) => (
               <Card
@@ -40,11 +40,15 @@ const ArtistCard: FC<Props> = ({ artist, handlePlayTrack }) => {
                   handlePlayTrack(track);
                   togglePlay(true);
                 }}
-                className=" cursor-pointer hover:bg-white/60 hover:text-blue-500"
+                className=" cursor-pointer hover:bg-white/60 h-full hover:text-blue-500"
               >
                 <CardHeader>
                   <CardTitle>{track.name}</CardTitle>
-                  <img src={track.album.image} alt="Album image" />
+                  <img
+                    className="rounded-lg h-2/3"
+                    src={track.album.image}
+                    alt="Album image"
+                  />
                 </CardHeader>
                 <CardContent className="text-xs">
                   <CardDescription className="">

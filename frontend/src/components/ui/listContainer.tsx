@@ -39,7 +39,7 @@ export default function ListContainer() {
   }, [accessToken]);
 
   return (
-    <div className="rounded-md border-4 border-black bg-colors-customYellow m-4 p-4 sm:w-full  h-[70vh] sm:h-[70vh] md:h-[70vh] lg:h-[60vh] overflow-y-auto">
+    <div className="rounded-md border-4 border-black bg-colors-customYellow m-4 p-4 sm:w-full  h-[70vh] sm:h-[70vh] md:h-[70vh] lg:h-[75vh] overflow-y-auto">
       <h2 className="text-4xl font-bold mb-4 bg-colors-customYellow">
         Top Artists
       </h2>
