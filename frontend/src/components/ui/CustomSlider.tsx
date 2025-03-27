@@ -52,8 +52,11 @@ const CustomSlider = ({
       handleMove(e.clientX);
     };
 
-    const handleMouseUp = () => {
-      setIsDragging(false);
+    const handleMouseUp = (e: MouseEvent) => {
+      if (isDragging) {
+        handleMove(e.clientX); // Ensure the final position is set on mouse up
+        setIsDragging(false);
+      }
     };
 
     document.addEventListener("mousemove", handleMouseMove);
@@ -69,7 +72,7 @@ const CustomSlider = ({
     <div
       ref={sliderRef}
       className={cn(
-        "relative h-1  group cursor-pointer rounded-full",
+        "relative h-1 group cursor-pointer rounded-full",
         className
       )}
       onMouseDown={handleMouseDown}

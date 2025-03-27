@@ -7,7 +7,7 @@ import {
 } from "./ui/PlayerButtons";
 import { useSpotifyPlayer } from "@/helpers/SpotifyPlayer";
 import { Volume2 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import CustomSlider from "./ui/CustomSlider";
 import DeviceMenu from "./ui/DeviceMenu";
 
@@ -17,36 +17,42 @@ const PlayerComponent = () => {
   const [volume, setVolume] = useState(20);
   const [progress, setProgress] = useState(0);
   const accessToken = localStorage.getItem("spotify_access_token");
+  const intervalRef = useRef<number | null>(null);
 
   useEffect(() => {
-    let intervalId: number | undefined;
+    const updateProgress = async () => {
+      if (player) {
+        const state = await player.getCurrentState();
+        if (state) {
+          setProgress(state.position);
+        }
+      }
+    };
 
-    //Start timer with same length as song
     if (isPlaying && track) {
-      intervalId = window.setInterval(() => {
-        setProgress((prev) => {
-          if (prev >= track.duration_ms) {
-            clearInterval(intervalId);
-            return track.duration_ms;
-          }
-          return prev + 1000;
-        });
-      }, 1000);
-    }
-
-    // Reset progress when track changes
-    if (track) {
-      setProgress(0);
+      updateProgress(); // Initial update
+      intervalRef.current = window.setInterval(updateProgress, 1000);
+    } else if (!isPlaying && intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
 
     return () => {
-      if (intervalId) clearInterval(intervalId);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
     };
-  }, [isPlaying, track]);
+  }, [isPlaying, track, player]);
+
+  useEffect(() => {
+    // Reset progress only when a new track starts
+    if (track) {
+      setProgress(0);
+    }
+  }, [track]);
 
   const handlePlayPause = async () => {
     if (!player) return;
-    console.log(isPlaying);
     if (isPlaying) {
       player.pause();
       togglePlay(false);
@@ -67,7 +73,6 @@ const PlayerComponent = () => {
     if (!player) return;
 
     try {
-      // First try transferring playback
       const response = await fetch(
         "https://api.spotify.com/v1/me/player/transfer",
         {
@@ -167,7 +172,10 @@ const PlayerComponent = () => {
                 min={0}
                 max={track.duration_ms}
                 value={progress}
-                onChange={(value) => setProgress(value)}
+                onChange={(value) => {
+                  setProgress(value);
+                  player?.seek(progress);
+                }}
                 className="flex-1"
               />
               <span className="text-xs text-yellow-100 ml-2 w-10">

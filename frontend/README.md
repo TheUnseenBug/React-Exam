@@ -10,3 +10,7 @@ Once a user has signed-in they are taken to the Home Page where one list appear 
 ### Artist Page
 
 Every artist has its own page showing their name, popularity, an image and a list of their most popular tracks
+
+## Video about this script:
+
+[![Brick Layers for everybody](https://img.youtube.com/vi/qqJOa46OTTs/maxresdefault.jpg)](https://www.youtube.com/watch?v=qqJOa46OTTs)

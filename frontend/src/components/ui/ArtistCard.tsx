@@ -25,7 +25,11 @@ const ArtistCard: FC<Props> = ({ artist, handlePlayTrack }) => {
           <CardDescription>Popularity: {artist.popularity}</CardDescription>
         </CardHeader>
         <CardContent className="flex justify-center">
-          <img src={artist.image} alt="artist image" />
+          <img
+            className="h-2/3 rounded-lg"
+            src={artist.image}
+            alt="artist image"
+          />
         </CardContent>
 
         <CardContent>
@@ -53,9 +57,6 @@ const ArtistCard: FC<Props> = ({ artist, handlePlayTrack }) => {
                     Duration: {timeConverter(track.duration_ms)}
                   </CardDescription>
                 </CardContent>
-                <CardDescription>
-                  <a href={track.uri}>Listen on Spotify</a>
-                </CardDescription>
               </Card>
             ))}
           </article>
