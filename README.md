@@ -4,7 +4,7 @@
 
 ## Huvudkomponenter
 
-[![Brick Layers for everybody](https://img.youtube.com/vi/qqJOa46OTTs/maxresdefault.jpg)](https://www.youtube.com/watch?v=qqJOa46OTTs)
+[![Brick Layers for everybody](https://x47fqbpt2q.ufs.sh/f/gFjC50OLd3eU9S9oBzWM2iW1deIh3k7zY6puryXg4twRxKsQ)
 
 ### Home (`/src/pages/Home.tsx`)
 
